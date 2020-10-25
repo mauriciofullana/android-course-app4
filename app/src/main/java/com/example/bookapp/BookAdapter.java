@@ -22,18 +22,34 @@ public class BookAdapter extends ArrayAdapter<Book> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        View v = layoutInflater.inflate(R.layout.item_book, parent, false);
+        //View v = layoutInflater.inflate(R.layout.item_book, parent, false);
+        View v = convertView;
+        ViewHolder viewHolder = null;
 
-        TextView txtBookName = v.findViewById(R.id.txt_book_name);
-        TextView txtAuthorName = v.findViewById(R.id.txt_book_author);
-        ImageView ivBookImage = v.findViewById(R.id.iv_book_image);
+        if (convertView == null) {
+            viewHolder = new ViewHolder();
+            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+            v = layoutInflater.inflate(R.layout.item_book, parent, false);
+
+            viewHolder.txtBookName = v.findViewById(R.id.txt_book_name);
+            viewHolder.txtAuthorName = v.findViewById(R.id.txt_book_author);
+            viewHolder.ivBookImage = v.findViewById(R.id.iv_book_image);
+            v.setTag(viewHolder);
+        } else {
+            // reuse of views
+            viewHolder = (ViewHolder) v.getTag();
+        }
 
         Book book = getItem(position);
-        txtBookName.setText(book.getBookName());
-        txtAuthorName.setText(book.getAuthorName());
-        ivBookImage.setImageDrawable(getContext().getResources().getDrawable(book.getBookImage()));
+        viewHolder.txtBookName.setText(book.getBookName());
+        viewHolder.txtAuthorName.setText(book.getAuthorName());
+        viewHolder.ivBookImage.setImageDrawable(getContext().getResources().getDrawable(book.getBookImage()));
 
         return v;
+    }
+
+    private static class ViewHolder {
+        TextView txtBookName, txtAuthorName;
+        ImageView ivBookImage;
     }
 }
